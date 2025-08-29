@@ -2,6 +2,43 @@
 <html lang="pt-br">
 <head>
     <style>
+        /* Responsividade para legenda, menu de camadas e popups */
+        .info.legend {
+            max-width: 90vw;
+            font-size: 0.98em;
+            word-break: break-word;
+        }
+        #layer-menu-panel {
+            max-width: 95vw;
+            font-size: 0.98em;
+        }
+        .leaflet-popup-content {
+            max-width: 90vw !important;
+            min-width: 120px;
+            font-size: 0.98em;
+            overflow-x: auto;
+            word-break: break-word;
+        }
+        @media (max-width: 600px) {
+            .info.legend {
+                max-width: 98vw;
+                font-size: 0.93em;
+                left: 2vw !important;
+                right: 2vw !important;
+            }
+            #layer-menu-panel {
+                max-width: 98vw;
+                font-size: 0.93em;
+                left: 2vw !important;
+                right: 2vw !important;
+            }
+            .leaflet-popup-content {
+                max-width: 98vw !important;
+                font-size: 0.93em;
+            }
+        }
+    </style>
+    <style>
         @media print {
             html, body {
                 width: 100vw;
