@@ -98,6 +98,9 @@
         <!-- Leaflet JS -->
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Add Leaflet.draw CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 </head>
 <body>
     <header>
@@ -128,8 +131,8 @@
         }
         #layer-menu-btn {
             position: absolute;
-            top: 150px;
-            left: 10px;
+            top: 10px;
+            left: 50px;
             z-index: 1002;
             background: #027a8f;
             color: #fff;
@@ -146,8 +149,8 @@
         }
         #layer-menu-panel {
             position: absolute;
-            top: 190px;
-            left: 10px;
+            top: 50px;
+            left: 50px;
             z-index: 1001;
             background: rgba(247, 247, 248, 0.97);
             border-radius: 8px;
@@ -683,5 +686,47 @@
             gap: 6px;
         }
     </style>
+    <style>
+        .leaflet-draw-toolbar {
+            display: block !important;
+        }
+    </style>
+
+    <script>
+        // Ensure the draw control is properly added to the map
+        map.addControl(drawControl);
+    </script>
+
+    <script>
+        // Initialize Leaflet.draw
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems
+            },
+            draw: {
+                polygon: true,
+                polyline: true,
+                rectangle: true,
+                circle: false,
+                marker: true
+            }
+        });
+        map.addControl(drawControl);
+
+        // Handle created layers
+        map.on('draw:created', function (e) {
+            var type = e.layerType,
+                layer = e.layer;
+
+            if (type === 'marker') {
+                layer.bindPopup('A marker!');
+            }
+
+            drawnItems.addLayer(layer);
+        });
+    </script>
 </body>
 </html>
