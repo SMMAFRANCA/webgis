@@ -98,9 +98,8 @@
         <!-- Leaflet JS -->
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <!-- Add Leaflet.draw CSS and JS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
 </head>
 <body>
     <header>
@@ -132,7 +131,7 @@
         #layer-menu-btn {
             position: absolute;
             top: 10px;
-            left: 50px;
+            right: 10px;
             z-index: 1002;
             background: #027a8f;
             color: #fff;
@@ -150,7 +149,7 @@
         #layer-menu-panel {
             position: absolute;
             top: 50px;
-            left: 50px;
+            right: 10px;
             z-index: 1001;
             background: rgba(247, 247, 248, 0.97);
             border-radius: 8px;
@@ -261,7 +260,7 @@
 
             // Controle de impressão do mapa como controle Leaflet
             var PrintControl = L.Control.extend({
-                options: { position: 'topright' },
+                options: { position: 'topleft' },
                 onAdd: function(map) {
                     var btn = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
                     btn.innerHTML = '🖨️';
@@ -389,11 +388,11 @@
                 });
 
                 // Legenda dinâmica (sem inventario_arboreo_2019_otimo)
-                var legend = L.control({ position: 'bottomright' });
+                var legend = L.control({ position: 'bottomleft' });
                 function getLegendHtml() {
                     var html = '';
                     if (map.hasLayer(appLayer)) {
-                        html += '<b>APP</b><br><i style="background:#ff0000;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> APP<br>';
+                        html += '<i style="background:#ff0000;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> APP<br>';
                     }
                     if (map.hasLayer(areaInstitucionalLayer)) {
                         html += '<i style="background:#ffff00;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> Área Institucional<br>';
@@ -671,6 +670,36 @@
             // O controle de visibilidade agora é feito pelo controle de camadas do Leaflet
 
             // Legenda personalizada
+
+            // Initialize Leaflet.draw
+            var drawnItems = new L.FeatureGroup();
+            map.addLayer(drawnItems);
+
+            var drawControl = new L.Control.Draw({
+                edit: {
+                    featureGroup: drawnItems
+                },
+                draw: {
+                    polygon: true,
+                    polyline: true,
+                    rectangle: true,
+                    circle: false,
+                    marker: true
+                }
+            });
+            map.addControl(drawControl);
+
+            // Handle created layers
+            map.on('draw:created', function (e) {
+                var type = e.layerType,
+                    layer = e.layer;
+
+                if (type === 'marker') {
+                    layer.bindPopup('A marker!');
+                }
+
+                drawnItems.addLayer(layer);
+            });
         </script>
     <style>
         #layer-controls {
@@ -691,42 +720,5 @@
             display: block !important;
         }
     </style>
-
-    <script>
-        // Ensure the draw control is properly added to the map
-        map.addControl(drawControl);
-    </script>
-
-    <script>
-        // Initialize Leaflet.draw
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
-
-        var drawControl = new L.Control.Draw({
-            edit: {
-                featureGroup: drawnItems
-            },
-            draw: {
-                polygon: true,
-                polyline: true,
-                rectangle: true,
-                circle: false,
-                marker: true
-            }
-        });
-        map.addControl(drawControl);
-
-        // Handle created layers
-        map.on('draw:created', function (e) {
-            var type = e.layerType,
-                layer = e.layer;
-
-            if (type === 'marker') {
-                layer.bindPopup('A marker!');
-            }
-
-            drawnItems.addLayer(layer);
-        });
-    </script>
 </body>
 </html>
