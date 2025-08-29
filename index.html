@@ -411,7 +411,7 @@
                         html += '<i style="background:#17becf;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;border-style:dashed;vertical-align:middle;"></i> Lotes EMDEF<br>';
                     }
                     if (map.hasLayer(inventarioArboreoOtimoLayer)) {
-                        html += '<i style="background:#58d68d;width:18px;height:18px;display:inline-block;margin-right:6px;border-radius:50%;border:2px solid #229954;vertical-align:middle;"></i> Inventário Arbóreo 2019 (Ótimo)<br>';
+                        html += '<i style="background:#58d68d;width:18px;height:18px;display:inline-block;margin-right:6px;border-radius:50%;border:2px solid #229954;vertical-align:middle;"></i> Árvores - Estado geral: Ótimo<br>';
                     }
                     if (map.hasLayer(limiteMunicipalLayer)) {
                         html += '<hr style="margin:6px 0;"><i style="border:3px solid #d62728;width:18px;height:0;display:inline-block;margin-right:6px;vertical-align:middle;"></i> Limite Municipal';
@@ -487,9 +487,9 @@
                     "Área Verde": areaVerdeLayer,
                     "Área de Uso Especial": areaUsoEspecialLayer,
                     "Lotes": lotesLayer,
-                    "Lotes em Definição": lotesEmdefLayer,
+                    "Lotes EMDEF": lotesEmdefLayer,
                     "Limite Municipal de Franca": limiteMunicipalLayer,
-                    "Inventário Arbóreo 2019 (Ótimo)": inventarioArboreoOtimoLayer
+                    "Árvores - Estado geral: Ótimo": inventarioArboreoOtimoLayer
                 };
                 var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false });
                 layerControl.addTo(map);
