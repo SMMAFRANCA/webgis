@@ -1,0 +1,159 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis version="3.40.9-Bratislava">
+  <identifier></identifier>
+  <parentidentifier>CYA Engenharia Ambiental da Alta Mogiana Ltda ME</parentidentifier>
+  <language>PRT</language>
+  <type>dataset</type>
+  <title>INVENTÁRIO, DIAGNÓSTICO E PROGNÓSTICO DA
+ARBORIZAÇÃO URBANA
+DO MUNICÍPIO DE FRANCA/SP
+</title>
+  <abstract>INVENTÁRIO, DIAGNÓSTICO E PROGNÓSTICO DA 
+ARBORIZAÇÃO URBANA 
+DO MUNICÍPIO DE FRANCA/SP 
+APRESENTAÇÃO 
+Em 19 de julho de 2016, por meio do Contrato nº 118/2016, a Prefeitura Municipal de Franca contratou os serviços da Cya Engenharia Ambiental da Alta Mogiana Ltda – ME como empresa especializada para a execução de inventário, diagnóstico e prognóstico da arborização urbana do município de Franca-SP, conforme especificações constantes no Anexo II do Edital de Tomada de Preços nº 004/16, Processo nº 020980/2014. Os recursos para o pagamento do trabalho são financiados pelo Fundo Municipal do Meio Ambiente. 
+Este trabalho concretiza a primeira iniciativa de levantamento, diagnóstico e prognóstico total da arborização urbana deste município, sendo que esforços anteriores abrangeram apenas algumas localidades dele. 
+Este documento apresenta os resultados do trabalho realizado, reunindo informações sobre a Arborização Urbana de Franca a fim de subsidiar seu planejamento e gestão municipal presente e futura. 
+  
+OBJETIVOS 
+O objetivo deste trabalho foi a realização do inventário, diagnóstico e prognóstico da arborização urbana do município de Franca/SP. A abrangência do trabalho consistiu em todos os bairros da área urbana deste município, sendo o inventário realizado em 100% das árvores existentes em calçadas, canteiros centrais, praças, vias públicas e nos seguintes parques: Parque Zumbi dos Palmares, Parque Lupércio Taveira, Parque do Jardim Dermínio e Parque do C.S.U. 
+  
+DIREÇÃO E RESPONSABILIDADE TÉCNICA 
+  
+Fernando Sordi Taveira 
+Engenheiro Agrônomo 
+CREA-SP nº 5.060.571.555 
+ART nº 92.221.220.130.498.416 
+  
+COORDENAÇÃO TÉCNICA 
+  
+Tatiana Parreiras Martins 
+Bióloga e Mestre em Ciências da Engenharia Ambiental 
+  
+Tatiana Brambilla Pinheiro 
+Médica Veterinária e Especialista em Patologia Clínica 
+  
+Cairo Faleiros de Figueiredo 
+Biólogo e Mestre em Ciências Biológicas (Botânica) 
+EQUIPE EXECUTORA DO INVENTÁRIO (ordem alfabética) 
+  
+Bárbara André Marques 
+Engenheira Ambiental 
+  
+Cairo Faleiros de Figueiredo 
+Biólogo e Mestre em Ciências Biológicas (Botânica) 
+  
+Cristiane Kempe 
+Bacharel em Relações Internacionais 
+  
+Daniela de Pra 
+Gestora Ambiental 
+  
+Eduarda Talita de Freitas da Silva 
+Técnica em Agropecuária 
+  
+Fernando Sordi Taveira 
+Engenheiro Agrônomo 
+  
+Gabriel Rodrigues Nascimento 
+Engenheiro Florestal e Especialista em Geoprocessamento 
+  
+Júlia Morales da Silva 
+Bióloga 
+  
+Juliana Aparecida da Silva 
+Bióloga 
+  
+Katia Freire da Silva 
+Bióloga e Mestre em Botânica 
+  
+Madione Baldochi 
+Biólogo 
+  
+Maria Fernanda M. N. Fernandes 
+Engenheira Agrônoma 
+  
+Mônica Yumi Menezes Sassaki 
+Bióloga e Mestre em Bioquímica 
+  
+Munyk Gloria Mouro 
+Bióloga 
+  
+Natália Helena Pesso Coelho 
+Bióloga e Mestre em Ciências 
+  
+Nicoli Dias Oliveira 
+Bióloga 
+  
+Ricardo Luís Jardim 
+Biólogo 
+  
+Rodrigo Dias Amato 
+Engenheiro Ambiental 
+  
+Tatiana Brambilla Pinheiro 
+Médica Veterinária e Especialista em Patologia Clínica 
+  
+Tatiana Parreiras Martins 
+Bióloga e Mestre em Ciências da Engenharia Ambiental 
+  
+  
+A responsabilidade de divulgação das informações deste trabalho são exclusivas da Prefeitura Municipal de Franca. 
+  
+JULHO de 2019. </abstract>
+  <keywords vocabulary="gmd:topicCategory">
+    <keyword>Ambiente</keyword>
+    <keyword>Arborização urbana</keyword>
+    <keyword>Informação Geocientífica</keyword>
+    <keyword>Sociedade</keyword>
+  </keywords>
+  <contact>
+    <name>Fernando Sordi Taveira</name>
+    <organization>CYA Ambiental da Alta Mogiana</organization>
+    <position>responsável técnico</position>
+    <voice>atendimento@cyaambiental.com.br</voice>
+    <fax>Rua Saldanha Marinho, 2495 - Bairro São José - Franca-SP</fax>
+    <email>(16) 3705 4000 / (16) 99133 1926</email>
+    <role>Engenheiro Agrônomo</role>
+  </contact>
+  <links>
+    <link format="" size="" mimeType="" type="OGC:CSW" description="" url="www.cyaambiental.com.br" name="CYA Ambiental da Alta Mogiana"/>
+  </links>
+  <history></history>
+  <dates/>
+  <fees></fees>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <constraints type="use">Não definido 1</constraints>
+  <rights>CYA Engenharia Ambiental da Alta Mogiana Ltda ME</rights>
+  <license></license>
+  <encoding></encoding>
+  <crs>
+    <spatialrefsys nativeFormat="Wkt">
+      <wkt>PROJCRS["SIRGAS 2000 / UTM zone 23S",BASEGEOGCRS["SIRGAS 2000",DATUM["Sistema de Referencia Geocentrico para las AmericaS 2000",ELLIPSOID["GRS 1980",6378137,298.257222101,LENGTHUNIT["metre",1]]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433]],ID["EPSG",4674]],CONVERSION["UTM zone 23S",METHOD["Transverse Mercator",ID["EPSG",9807]],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",-45,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["Scale factor at natural origin",0.9996,SCALEUNIT["unity",1],ID["EPSG",8805]],PARAMETER["False easting",500000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",10000000,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1]],USAGE[SCOPE["Engineering survey, topographic mapping."],AREA["Brazil - between 48°W and 42°W, northern and southern hemispheres, onshore and offshore."],BBOX[-33.5,-48,5.13,-42]],ID["EPSG",31983]]</wkt>
+      <proj4>+proj=utm +zone=23 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</proj4>
+      <srsid>2676</srsid>
+      <srid>31983</srid>
+      <authid>EPSG:31983</authid>
+      <description>SIRGAS 2000 / UTM zone 23S</description>
+      <projectionacronym>utm</projectionacronym>
+      <ellipsoidacronym>EPSG:7019</ellipsoidacronym>
+      <geographicflag>false</geographicflag>
+    </spatialrefsys>
+  </crs>
+  <extent>
+    <spatial maxz="0" dimensions="2" crs="EPSG:31983" miny="0" minz="0" minx="0" maxy="0" maxx="0"/>
+    <temporal>
+      <period>
+        <start></start>
+        <end></end>
+      </period>
+    </temporal>
+  </extent>
+</qgis>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Web GIS</title>
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <!-- Leaflet JS -->
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Bem-vindo ao Web GIS - Franca/SP</h1>
+    </header>
+    <main>
+    <h2>Secretaria Municipal de Meio Ambiente</h2>
+    <div class="main-flex">
+            <nav id="layer-menu">
+                <h2>Camadas</h2>
+                <div id="layer-controls"></div>
+            </nav>
+            <div id="map">
+                <!-- O mapa será renderizado aqui -->
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Web GIS</p>
+    </footer>
+        <script>
+
+            // Inicialização básica do Leaflet
+            // Centro em Franca, SP: latitude -20.5386, longitude -47.4009
+            var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            });
+            var esriSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles © Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            });
+            // Google Hybrid (via CartoDB Positron + Esri World Imagery + labels)
+            var googleHybrid = L.layerGroup([
+                L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                    attribution: 'Map data ©2025 Google',
+                    maxZoom: 20
+                }),
+                L.tileLayer('https://mt1.google.com/vt/lyrs=h&x={x}&y={y}&z={z}', {
+                    attribution: '',
+                    maxZoom: 20
+                })
+            ]);
+            var map = L.map('map', {
+                center: [-20.5386, -47.4009],
+                zoom: 13,
+                layers: [esriSat] // camada base padrão agora é Esri
+            });
+
+
+            // Controle de impressão do mapa como controle Leaflet
+            var PrintControl = L.Control.extend({
+                options: { position: 'topleft' },
+                onAdd: function(map) {
+                    var btn = L.DomUtil.create('button', 'leaflet-bar leaflet-control leaflet-control-custom');
+                    btn.innerHTML = '🖨️';
+                    btn.title = 'Imprimir Mapa';
+                    btn.style.width = '34px';
+                    btn.style.height = '34px';
+                    btn.style.fontSize = '1.3em';
+                    btn.style.cursor = 'pointer';
+                    btn.style.background = '#fff';
+                    btn.style.border = 'none';
+                    btn.style.boxShadow = '0 1px 5px rgba(0,0,0,0.3)';
+                    btn.onmouseover = function() { btn.style.background = '#f4f4f4'; };
+                    btn.onmouseout = function() { btn.style.background = '#fff'; };
+                    L.DomEvent.on(btn, 'click', function(e) {
+                        L.DomEvent.stopPropagation(e);
+                        L.DomEvent.preventDefault(e);
+                        window.print();
+                    });
+                    return btn;
+                }
+            });
+            map.addControl(new PrintControl());
+
+            // Barra de escala padrão do Leaflet
+            L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
+
+            // Seta norte personalizada
+            var NorthControl = L.Control.extend({
+                options: { position: 'topright' },
+                onAdd: function(map) {
+                    var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-north');
+                    container.style.background = 'rgba(255,255,255,0.9)';
+                    container.style.padding = '2px 6px 2px 6px';
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.alignItems = 'center';
+                    container.innerHTML = `
+                        <svg width="24" height="32" viewBox="0 0 24 32">
+                          <polygon points="12,2 22,30 12,24 2,30" style="fill:#d62728;stroke:#222;stroke-width:1"/>
+                          <text x="12" y="18" text-anchor="middle" font-size="10" fill="#222" font-family="Arial" font-weight="bold">N</text>
+                        </svg>
+                    `;
+                    container.title = 'Norte';
+                    return container;
+                }
+            });
+            map.addControl(new NorthControl());
+
+
+
+            // Função para definir cor por Classe
+            function getColorByClasse(classe) {
+                var colors = {
+                    'APP': '#1f77b4',
+                    'ARL': '#ff7f0e',
+                    'Reserva': '#2ca02c',
+                    'Outro': '#d62728'
+                };
+                return colors[classe] || '#3388ff';
+            }
+
+            // Carregar todas as camadas em paralelo
+            Promise.all([
+                fetch('camadas/app.geojson').then(r => r.json()),
+                fetch('camadas/area_institucional.geojson').then(r => r.json()),
+                fetch('camadas/area_patrimonial.geojson').then(r => r.json()),
+                fetch('camadas/area_verde.geojson').then(r => r.json()),
+                fetch('camadas/area_uso_especial.geojson').then(r => r.json()),
+                fetch('camadas/lotes.geojson').then(r => r.json()),
+                fetch('camadas/lotes_emdef.geojson').then(r => r.json()),
+                fetch('camadas/limite_municipal_franca.geojson').then(r => r.json()),
+                fetch('camadas/inventario_arboreo_2019_otimo.geojson').then(r => r.json())
+            ]).then(function([
+                appData,
+                areaInstitucionalData,
+                areaPatrimonialData,
+                areaVerdeData,
+                areaUsoEspecialData,
+                lotesData,
+                lotesEmdefData,
+                limiteMunicipalData,
+                inventarioArboreoOtimoData
+            ]) {
+                var appLayer = L.geoJSON(appData, {
+                    style: function(feature) {
+                        var cor = getColorByClasse(feature.properties && (feature.properties.Classe || feature.properties.classe));
+                        return {
+                            color: cor,
+                            weight: 2,
+                            fillOpacity: 0.3
+                        };
+                    },
+                    onEachFeature: bindPopupAtributos
+                });
+                var areaInstitucionalLayer = L.geoJSON(areaInstitucionalData, {
+                    style: { color: '#9467bd', weight: 2, fillOpacity: 0.4 },
+                    onEachFeature: bindPopupAtributos
+                });
+                var areaPatrimonialLayer = L.geoJSON(areaPatrimonialData, {
+                    style: { color: '#8c564b', weight: 2, fillOpacity: 0.4 },
+                    onEachFeature: bindPopupAtributos
+                });
+                var areaVerdeLayer = L.geoJSON(areaVerdeData, {
+                    style: { color: '#2ca02c', weight: 2, fillOpacity: 0.4 },
+                    onEachFeature: bindPopupAtributos
+                });
+                var areaUsoEspecialLayer = L.geoJSON(areaUsoEspecialData, {
+                    style: { color: '#e377c2', weight: 2, fillOpacity: 0.4 },
+                    onEachFeature: bindPopupAtributos
+                });
+                var lotesLayer = L.geoJSON(lotesData, {
+                    style: { color: '#bcbd22', weight: 1.5, fillOpacity: 0.2 },
+                    onEachFeature: bindPopupAtributos
+                });
+                var lotesEmdefLayer = L.geoJSON(lotesEmdefData, {
+                    style: { color: '#17becf', weight: 1.5, fillOpacity: 0.2, dashArray: '4 2' },
+                    onEachFeature: bindPopupAtributos
+                });
+                var limiteMunicipalLayer = L.geoJSON(limiteMunicipalData, {
+                    style: { color: '#d62728', weight: 3, fillOpacity: 0 },
+                    onEachFeature: bindPopupAtributos
+                });
+                // Adicionar a camada Limite Municipal de Franca ao mapa por padrão
+                limiteMunicipalLayer.addTo(map);
+                // Adiciona todas as camadas ao controle, mas só ativa Limite Municipal inicialmente
+                // (demais camadas podem ser ativadas pelo controle)
+                // Legenda dinâmica
+                var legend = L.control({ position: 'bottomright' });
+                function getLegendHtml() {
+                    var html = '';
+                    if (map.hasLayer(appLayer)) {
+                        html += '<b>APP</b><br><i style="background:#1f77b4;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> APP<br>';
+                    }
+                    if (map.hasLayer(areaInstitucionalLayer)) {
+                        html += '<i style="background:#9467bd;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> Área Institucional<br>';
+                    }
+                    if (map.hasLayer(areaPatrimonialLayer)) {
+                        html += '<i style="background:#8c564b;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> Área Patrimonial<br>';
+                    }
+                    if (map.hasLayer(areaVerdeLayer)) {
+                        html += '<i style="background:#2ca02c;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> Área Verde<br>';
+                    }
+                    if (map.hasLayer(areaUsoEspecialLayer)) {
+                        html += '<i style="background:#e377c2;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> Área de Uso Especial<br>';
+                    }
+                    if (map.hasLayer(lotesLayer)) {
+                        html += '<i style="background:#bcbd22;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;vertical-align:middle;"></i> Lotes<br>';
+                    }
+                    if (map.hasLayer(lotesEmdefLayer)) {
+                        html += '<i style="background:#17becf;width:18px;height:18px;display:inline-block;margin-right:6px;border:1px solid #888;border-style:dashed;vertical-align:middle;"></i> Lotes EMDEF<br>';
+                    }
+                    if (map.hasLayer(inventarioArboreoOtimoLayer)) {
+                        html += '<i style="background:#58d68d;width:18px;height:18px;display:inline-block;margin-right:6px;border-radius:50%;border:2px solid #229954;vertical-align:middle;"></i> Inventário Arbóreo 2019 (Ótimo)<br>';
+                    }
+                    if (map.hasLayer(limiteMunicipalLayer)) {
+                        html += '<hr style="margin:6px 0;"><i style="border:3px solid #d62728;width:18px;height:0;display:inline-block;margin-right:6px;vertical-align:middle;"></i> Limite Municipal';
+                    }
+                    return html;
+                }
+                legend.onAdd = function (map) {
+                    var div = L.DomUtil.create('div', 'info legend');
+                    div.style.background = 'rgba(255,255,255,0.95)';
+                    div.style.padding = '8px 12px';
+                    div.style.fontSize = '1em';
+                    div.style.boxShadow = '0 1px 5px rgba(0,0,0,0.2)';
+                    div.innerHTML = getLegendHtml();
+                    return div;
+                };
+                function updateLegendVisibility() {
+                    var overlays = [
+                        appLayer,
+                        areaInstitucionalLayer,
+                        areaPatrimonialLayer,
+                        areaVerdeLayer,
+                        areaUsoEspecialLayer,
+                        lotesLayer,
+                        lotesEmdefLayer,
+                        inventarioArboreoOtimoLayer,
+                        limiteMunicipalLayer
+                    ];
+                    var anyActive = overlays.some(function(layer) { return map.hasLayer(layer); });
+                    var legendDiv = document.querySelector('.info.legend');
+                    if (anyActive) {
+                        if (!legendDiv) {
+                            legend.addTo(map);
+                            setTimeout(function() {
+                                var legendDiv2 = document.querySelector('.info.legend');
+                                if (legendDiv2) legendDiv2.innerHTML = getLegendHtml();
+                            }, 50);
+                        } else {
+                            legendDiv.innerHTML = getLegendHtml();
+                        }
+                    } else {
+                        if (legendDiv) legend.remove();
+                    }
+                }
+                map.on('overlayadd overlayremove', updateLegendVisibility);
+                map.on('layeradd layerremove', updateLegendVisibility);
+                setTimeout(updateLegendVisibility, 300);
+                // Forçar atualização da legenda após adicionar a camada
+                setTimeout(updateLegendVisibility, 100);
+
+                var inventarioArboreoOtimoLayer = L.geoJSON(inventarioArboreoOtimoData, {
+                    pointToLayer: function(feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 4,
+                            fillColor: '#58d68d',
+                            color: '#229954',
+                            weight: 1,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        });
+                    },
+                    onEachFeature: bindPopupAtributos
+                });
+
+                var baseMaps = {
+                    "Google Satélite Híbrido": googleHybrid,
+                    "OpenStreetMap": osm,
+                    "Satélite (Esri)": esriSat
+                };
+                var overlayMaps = {
+                    "APP": appLayer,
+                    "Área Institucional": areaInstitucionalLayer,
+                    "Área Patrimonial": areaPatrimonialLayer,
+                    "Área Verde": areaVerdeLayer,
+                    "Área de Uso Especial": areaUsoEspecialLayer,
+                    "Lotes": lotesLayer,
+                    "Lotes em Definição": lotesEmdefLayer,
+                    "Limite Municipal de Franca": limiteMunicipalLayer,
+                    "Inventário Arbóreo 2019 (Ótimo)": inventarioArboreoOtimoLayer
+                };
+                var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false });
+                layerControl.addTo(map);
+
+                // Renderizar controles também no menu lateral
+                setTimeout(function() {
+                    var controlsDiv = document.getElementById('layer-controls');
+                    if (controlsDiv) {
+                        controlsDiv.innerHTML = '';
+                        controlsDiv.appendChild(layerControl._container);
+                    }
+                }, 500);
+
+                // Adicionar apenas a camada Limite Municipal de Franca ao mapa após tudo pronto
+                limiteMunicipalLayer.addTo(map);
+            });
+
+            // Função para popups de atributos
+            function bindPopupAtributos(feature, layer) {
+                if (feature.properties) {
+                    var html = '<strong>Atributos:</strong><br><table style="font-size:0.98em">';
+                    var hasData = false;
+                    for (var key in feature.properties) {
+                        if (feature.properties.hasOwnProperty(key) && feature.properties[key] !== null && feature.properties[key] !== "") {
+                            hasData = true;
+                            html += '<tr><td><b>' + key + '</b></td><td>' + feature.properties[key] + '</td></tr>';
+                        }
+                    }
+                    html += '</table>';
+                    if (hasData) {
+                        layer.bindPopup(html);
+                    }
+                }
+            }
+
+            // O controle de visibilidade agora é feito pelo controle de camadas do Leaflet
+
+            // Legenda personalizada
+        </script>
+</body>
+</html>
